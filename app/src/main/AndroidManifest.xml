@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="www.seotoolzz.com.Ask">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/logo"
+        android:label=""
+        android:roundIcon="@drawable/logo"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".controller.MainActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".controller.LoginActivity"
+            android:label="@string/app_name">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="www.seotoolzz.com.Ask.controller.MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".controller.SignUpActivity"
+            android:label="@string/app_name">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="www.seotoolzz.com.Ask.controller.MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".controller.QuestionCreateActivity"
+            android:label="@string/app_name">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="www.seotoolzz.com.Ask.controller.MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".controller.UpdateQuestionActivity"
+            android:label="Asks">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="www.seotoolzz.com.Ask.controller.MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".controller.QuestionDetailActivity"
+            android:label="@string/app_name">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="www.seotoolzz.com.Ask.controller.MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".controller.AnswerActivity"
+            android:label="@string/app_name">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="www.seotoolzz.com.Ask.controller.MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".controller.MyQuestionActivity"
+            android:label="@string/app_name">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="www.seotoolzz.com.Ask.controller.MainActivity" />
+        </activity>
+    </application>
+
+</manifest>
