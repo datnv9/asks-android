@@ -1,40 +1,52 @@
 package www.seotoolzz.com.Ask.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import www.seotoolzz.com.Ask.controller.QuestionDetailActivity;
+
 import www.seotoolzz.com.Ask.R;
+import www.seotoolzz.com.Ask.controller.QuestionDetailActivity;
 import www.seotoolzz.com.Ask.model.Answer;
 import www.seotoolzz.com.Ask.util.AsksUtil;
 
 public class AnswerListAdapter extends BaseAdapter {
+
+    /*
+    Adapter chuyển đổi danh sách các câu trả lời về dạng hiển thị định nghĩa trong
+    item_answer_list.xml và đưa vào listview các câu trả lời
+     */
+
     private Context myContext;
-    private List<www.seotoolzz.com.Ask.model.Answer> myAnswer;
+    private List<Answer> myAnswer;
     private int userId;
-    private AlertDialog.Builder alert;
     private String token;
     private int ownerId;
     private String questionId;
+    private AlertDialog.Builder alert;
+
+    //API url
     private String removeAnswerUrl = "https://laravel-demo-deploy.herokuapp.com/api/v0/answers/remove";
     private String markAsSolveUrl = "https://laravel-demo-deploy.herokuapp.com/api/v0/answers/solve";
 
@@ -66,30 +78,35 @@ public class AnswerListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        View v = View.inflate(myContext, R.layout.item_answer_list,null);
+        @SuppressLint
+                ("ViewHolder") View v = View.inflate(myContext, R.layout.item_answer_list, null);
 
         final int pos = position;
         final int oId = ownerId;
-        TextView tvContent = (TextView)v.findViewById(R.id.txtContentAnswer);
-        TextView tvUserName = (TextView)v.findViewById(R.id.txtUserNameAnswer);
-        TextView tvTime = (TextView)v.findViewById(R.id.txtTimeAnswer);
-        Button btnSolve = (Button) v.findViewById(R.id.btnSolve);
 
+        //Ánh xạ các thành phần trong view
+        TextView tvContent = (TextView) v.findViewById(R.id.txtContentAnswer);
+        TextView tvUserName = (TextView) v.findViewById(R.id.txtUserNameAnswer);
+        TextView tvTime = (TextView) v.findViewById(R.id.txtTimeAnswer);
+        Button btnSolve = (Button) v.findViewById(R.id.btnSolveAnswer);
+        Button btnDelete = (Button) v.findViewById(R.id.btnDeleteAnswer);
+
+        //Gán nội dung các đoạn text
         tvContent.setText(myAnswer.get(position).getContent());
         tvUserName.setText(myAnswer.get(position).getUserName());
         tvTime.setText(myAnswer.get(position).getTime());
 
-        Log.d("STATUS", myAnswer.get(position).getVoteNumber() + "");
+        //Xét màu cho nút nếu câu trả lời là đúng
         if (String.valueOf(myAnswer.get(position).getVoteNumber()).equals("true")) {
             btnSolve.setTextColor(Color.WHITE);
             btnSolve.setBackgroundColor(Color.parseColor("#00C851"));
-            btnSolve.setHeight(30);
         }
 
+        //Xử lý sự kiện ấn nút SOLVE
         btnSolve.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("SOLVE", oId + "");
+                //Kiểm tra xem có phải người đặt câu hỏi không
                 if (userId == oId) {
                     alert.setTitle("Info");
                     alert.setMessage("Mark this answer as result?");
@@ -97,7 +114,6 @@ public class AnswerListAdapter extends BaseAdapter {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             markAsSolve(myAnswer.get(pos).getId());
-                            Log.d("MARK_ANS", "OK");;
                         }
                     });
                     alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -109,28 +125,23 @@ public class AnswerListAdapter extends BaseAdapter {
                     });
                     alert.show();
                 } else {
-                    Toast.makeText(myContext.getApplicationContext(),
-                            "You not own this question",
-                            Toast.LENGTH_LONG
-                    ).show();
+                    Toast.makeText(myContext.getApplicationContext(), "You do not own this question", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        Button btnDeleteAnswer = (Button) v.findViewById(R.id.btnDeleteAnswer);
-
-        btnDeleteAnswer.setOnClickListener(new View.OnClickListener() {
+        //Xử lý sự kiện ấn nút DELETE
+        btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("DELETE", myAnswer.get(pos).getUserId() + "");
                 if (userId == myAnswer.get(pos).getUserId()) {
+                    //Kiểm tra xem có phải người viết câu trả lời không
                     alert.setTitle("Warning");
                     alert.setMessage("Are you sure to delete this answer?");
                     alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             deleteQuestion(myAnswer.get(pos).getId());
-                            Log.d("DEL_ANS", "OK");;
                         }
                     });
                     alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -142,84 +153,24 @@ public class AnswerListAdapter extends BaseAdapter {
                     });
                     alert.show();
                 } else {
-                    Toast.makeText(myContext.getApplicationContext(),
-                            "You not own this answer",
-                            Toast.LENGTH_LONG
-                    ).show();
+                    Toast.makeText(myContext.getApplicationContext(), "You do not own this answer", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
         v.setTag(myAnswer.get(position).getId());
-
         return v;
     }
 
-    private void deleteQuestion(int answerId)
-    {
+    //Hàm gọi API xử lý việc đánh dấu câu trả lời là đúng
+    private void markAsSolve(int answerId) {
         final int id = answerId;
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, this.removeAnswerUrl, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, markAsSolveUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
                     JSONObject res = new JSONObject(response);
-                    Log.d("LOGIN_RES", res.toString());
-                    int code = res.getJSONObject("meta").getInt("status");
-                    if (code == 700) {
-                        Toast.makeText(myContext, "Delete success", Toast.LENGTH_LONG).show();
-                        Intent changeView = new Intent(myContext, QuestionDetailActivity.class);
-                        changeView.putExtra("id", String.valueOf(questionId));
-                        myContext.startActivity(changeView);
-                    } else {
-                        Toast.makeText(myContext, res.getJSONObject("meta").getJSONObject("message").getString("main"), Toast.LENGTH_LONG).show();
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                if (error.getMessage() == null) {
-                    Log.d("VOLLEY_ERROR", "Unknow error");
-                    Toast.makeText(myContext, "Unknow error", Toast.LENGTH_SHORT).show();
-                } else {
-                    Log.d("VOLLEY_ERROR", "ERROR: " + error.getMessage());
-                    Toast.makeText(myContext, error.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("id", String.valueOf(id));
-
-                return params;
-            }
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("Authorization", token);
-
-                return params;
-            }
-        };
-        AsksUtil.getmInstance(myContext).addToRequestQueue(stringRequest);
-    }
-
-    private void markAsSolve(int answerId)
-    {
-        final int id = answerId;
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, this.markAsSolveUrl, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONObject res = new JSONObject(response);
-                    Log.d("LOGIN_RES", res.toString());
                     int code = res.getJSONObject("meta").getInt("status");
                     if (code == 700) {
                         Toast.makeText(myContext, "Mark as solve success", Toast.LENGTH_LONG).show();
@@ -229,7 +180,6 @@ public class AnswerListAdapter extends BaseAdapter {
                     } else {
                         Toast.makeText(myContext, res.getJSONObject("meta").getJSONObject("message").getString("main"), Toast.LENGTH_LONG).show();
                     }
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -238,27 +188,73 @@ public class AnswerListAdapter extends BaseAdapter {
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (error.getMessage() == null) {
-                    Log.d("VOLLEY_ERROR", "Unknow error");
                     Toast.makeText(myContext, "Unknow error", Toast.LENGTH_SHORT).show();
                 } else {
-                    Log.d("VOLLEY_ERROR", "ERROR: " + error.getMessage());
                     Toast.makeText(myContext, error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-
             }
         }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("id", String.valueOf(id));
-
                 return params;
             }
+
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("Authorization", token);
+                return params;
+            }
+        };
+        AsksUtil.getmInstance(myContext).addToRequestQueue(stringRequest);
+    }
 
+    //Hàm gọi API xử lý việc xóa câu trả lời
+    private void deleteQuestion(int answerId) {
+        final int id = answerId;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, removeAnswerUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject res = new JSONObject(response);
+                    int code = res.getJSONObject("meta").getInt("status");
+                    if (code == 700) {
+                        Toast.makeText(myContext, "Delete success", Toast.LENGTH_LONG).show();
+                        Intent changeView = new Intent(myContext, QuestionDetailActivity.class);
+                        changeView.putExtra("id", String.valueOf(questionId));
+//                        changeView.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        myContext.startActivity(changeView);
+                    } else {
+                        Toast.makeText(myContext, res.getJSONObject("meta").getJSONObject("message").getString("main"), Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (error.getMessage() == null) {
+                    Toast.makeText(myContext, "Unknow error", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(myContext, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("id", String.valueOf(id));
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Authorization", token);
                 return params;
             }
         };

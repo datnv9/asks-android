@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">Asks</string>
     <string name="select_items">Active</string>
-    <string-array name="items">
+    <string-array name="question_filter">
         <item>Active</item>
         <item>Solve</item>
     </string-array>
-    <string-array name="items_1">
+    <string-array name="my_question_filter">
         <item>Active</item>
         <item>Draft</item>
         <item>Solve</item>

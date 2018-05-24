@@ -12,14 +12,6 @@ public class Answer {
     private Boolean voteNumber;
     private String time;
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
     public Answer(int id, int userId, String content, String userName, Boolean voteNumber, String time) {
         this.id = id;
         this.userId = userId;
@@ -27,6 +19,14 @@ public class Answer {
         this.userName = userName;
         this.voteNumber = voteNumber;
         this.time = time;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public int getId() {

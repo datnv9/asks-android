@@ -1,11 +1,13 @@
 package www.seotoolzz.com.Ask.controller;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -25,71 +27,72 @@ import java.util.Map;
 import www.seotoolzz.com.Ask.R;
 import www.seotoolzz.com.Ask.util.AsksUtil;
 
-public class QuestionCreateActivity extends AppCompatActivity {
+public class AnswerCreateActivity extends AppCompatActivity {
 
     /*
-    Activity cho việc tạo câu hỏi, giao diện ứng với activity_question_create.xml
+    Activity cho việc tạo câu trả lời cho câu hỏi với id của câu hỏi truyền qua intent,
+    giao diện ứng với activity_answer_create.xml
      */
 
-    Button btnPublish, btnDraft;
-    EditText edTitle;
-    EditText edQuestion;
+    private String questionId;
+    private EditText editTextAnswer;
+    private Button btnPostAnswer;
 
     //API url
-    private String createQuestionUrl = "http://laravel-demo-deploy.herokuapp.com/api/v0/questions";
+    private String createAnswerUrl = "https://laravel-demo-deploy.herokuapp.com/api/v0/answers";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_question_create);
+        setContentView(R.layout.activity_answer_create);
 
         //ActionBar cho nút quay lại
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        //Lấy questionId từ Intent
+        Intent recIntent = getIntent();
+        questionId = recIntent.getStringExtra("id");
+
         //Ánh xạ các thành phần trong view
-        edTitle = (EditText) findViewById(R.id.editTextCreateTitle);
-        edQuestion = (EditText) findViewById(R.id.editTextCreateQuestion);
-        btnPublish = (Button) findViewById(R.id.btnPublishCreate);
-        btnDraft = (Button) findViewById(R.id.btnDraftCreate);
+        editTextAnswer = (EditText) findViewById(R.id.editTextAnswer);
+        btnPostAnswer = (Button) findViewById(R.id.btnPostAnswer);
 
+        //Xử lý hiển thị keyboeard
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
 
-        //Xử lý sự kiện ấn nút gửi câu hỏi
-        btnPublish.setOnClickListener(new View.OnClickListener() {
+        //Xử lý sự kiện ấn nút gửi câu trả lời
+        btnPostAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                createQuestion(1);
-            }
-        });
-
-        //Xử lý sự kiện ấn nút gửi câu hỏi bản nháp
-        btnDraft.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createQuestion(0);
+            public void onClick(View view) {
+                postQuestion(questionId);
             }
         });
     }
 
-    //Hàm gọi API xử lý việc gửi câu trả hỏi
-    private void createQuestion(int status) {
-        final String title = this.edTitle.getText().toString();
-        final String question = this.edQuestion.getText().toString();
-        final int questionStatus = status;
+    //Hàm gọi API xử lý việc gửi câu trả lời
+    private void postQuestion(String questionId) {
+        final String id = questionId;
+        final String content = editTextAnswer.getText().toString();
 
-        //Kiểm tra độ dài tiêu đề và câu hỏi
-        if (title.trim().length() < 1 || question.trim().length() < 1) {
-            Toast.makeText(getApplicationContext(), "Please fill at least title and questions field", Toast.LENGTH_SHORT).show();
+        //Kiểm tra độ dài câu trả lời
+        if (content.trim().length() < 1) {
+            Toast.makeText(getApplicationContext(), "Please fill your answer", Toast.LENGTH_SHORT).show();
         } else {
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, this.createQuestionUrl, new Response.Listener<String>() {
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, createAnswerUrl, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     try {
                         JSONObject res = new JSONObject(response);
                         int code = res.getJSONObject("meta").getInt("status");
                         if (code == 700) {
-                            Toast.makeText(getApplicationContext(), "Publish success", Toast.LENGTH_SHORT).show();
-                            Intent changeView = new Intent(QuestionCreateActivity.this, MainActivity.class);
+                            Toast.makeText(getApplicationContext(), "Create answer success", Toast.LENGTH_SHORT).show();
+                            Intent changeView = new Intent(AnswerCreateActivity.this, QuestionDetailActivity.class);
+                            changeView.putExtra("id", id);
                             startActivity(changeView);
                         } else {
                             Toast.makeText(getApplicationContext(), res.getJSONObject("meta").getJSONObject("message").getString("main"), Toast.LENGTH_SHORT).show();
@@ -111,16 +114,15 @@ public class QuestionCreateActivity extends AppCompatActivity {
                 @Override
                 protected Map<String, String> getParams() throws AuthFailureError {
                     Map<String, String> params = new HashMap<>();
-                    params.put("title", title);
-                    params.put("content", question);
-                    params.put("status", String.valueOf(questionStatus));
+                    params.put("questions_id", id);
+                    params.put("content", content);
                     return params;
                 }
 
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     Map<String, String> params = new HashMap<String, String>();
-                    SharedPreferences sharePrefs = QuestionCreateActivity.this.getApplicationContext().getSharedPreferences("ASKS", MODE_PRIVATE);
+                    SharedPreferences sharePrefs = AnswerCreateActivity.this.getApplicationContext().getSharedPreferences("ASKS", MODE_PRIVATE);
                     params.put("Authorization", sharePrefs.getString("token", null));
                     return params;
                 }

@@ -12,14 +12,6 @@ public class Question {
     private String date;
     private int solve;
 
-    public int isSolve() {
-        return solve;
-    }
-
-    public void setSolve(int solve) {
-        this.solve = solve;
-    }
-
     public Question(int id, String title, String userName, int vote, String date, int solve) {
         this.id = id;
         this.title = title;
@@ -28,6 +20,14 @@ public class Question {
         this.date = date;
         this.solve = solve;
 
+    }
+
+    public int isSolve() {
+        return solve;
+    }
+
+    public void setSolve(int solve) {
+        this.solve = solve;
     }
 
     public int getId() {
