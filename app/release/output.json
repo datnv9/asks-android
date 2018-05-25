@@ -10,7 +10,7 @@
     },
     "path": "app-release.apk",
     "properties": {
-      "packageId": "www.seotoolzz.com.tabbed",
+      "packageId": "com.ptit.tabbed",
       "split": "",
       "minSdkVersion": "14"
     }
