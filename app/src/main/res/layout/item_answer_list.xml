@@ -75,24 +75,20 @@
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Solve" />
-
-                <Button
-                    android:id="@+id/btnSolvedAnswer"
-                    android:layout_width="100dp"
-                    android:layout_height="36dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/solved_btn_design"
-                    android:text="Solved"
-                    android:textColor="#FFFFFF"
-                    android:visibility="gone" />
+                    android:background="#D7D7D7"
+                    android:text="Solve"
+                    android:textColor="#000" />
 
                 <Button
                     android:id="@+id/btnDeleteAnswer"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginStart="15dp"
                     android:layout_weight="1"
-                    android:text="Delete" />
+                    android:background="#D7D7D7"
+                    android:text="Delete"
+                    android:textColor="#000" />
 
             </LinearLayout>
 

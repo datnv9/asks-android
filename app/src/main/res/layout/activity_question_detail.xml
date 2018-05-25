@@ -157,17 +157,21 @@
 
                                 <Button
                                     android:id="@+id/btnEdit"
-                                    android:layout_width="150dp"
-                                    android:layout_height="45dp"
+                                    android:layout_width="100dp"
+                                    android:layout_height="35dp"
                                     android:layout_weight="1"
+                                    android:background="#D7D7D7"
                                     android:drawableLeft="@android:drawable/ic_menu_edit"
-                                    android:text="Edit" />
+                                    android:text="Update" />
 
                                 <Button
                                     android:id="@+id/btnDelete"
-                                    android:layout_width="150dp"
-                                    android:layout_height="45dp"
+                                    android:layout_width="100dp"
+                                    android:layout_height="35dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginStart="10dp"
                                     android:layout_weight="1"
+                                    android:background="#D7D7D7"
                                     android:drawableLeft="@android:drawable/ic_delete"
                                     android:text="Delete" />
 

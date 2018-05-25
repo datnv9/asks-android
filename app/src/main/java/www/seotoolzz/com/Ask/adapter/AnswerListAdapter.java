@@ -89,7 +89,6 @@ public class AnswerListAdapter extends BaseAdapter {
         TextView tvUserName = (TextView) v.findViewById(R.id.txtUserNameAnswer);
         TextView tvTime = (TextView) v.findViewById(R.id.txtTimeAnswer);
         Button btnSolve = (Button) v.findViewById(R.id.btnSolveAnswer);
-        Button btnSolved = (Button) v.findViewById(R.id.btnSolvedAnswer);
         Button btnDelete = (Button) v.findViewById(R.id.btnDeleteAnswer);
 
         //Gán nội dung các đoạn text
@@ -97,10 +96,11 @@ public class AnswerListAdapter extends BaseAdapter {
         tvUserName.setText(myAnswer.get(position).getUserName());
         tvTime.setText(myAnswer.get(position).getTime());
 
-        //Đổi nút nếu câu trả lời là đúng
+        //Đổi màu nút nếu câu trả lời là đúng
         if (String.valueOf(myAnswer.get(position).getVoteNumber()).equals("true")) {
-            btnSolve.setVisibility(View.GONE);
-            btnSolved.setVisibility(View.VISIBLE);
+            btnSolve.setBackgroundColor(Color.parseColor("#00C851"));
+            btnSolve.setTextColor(Color.WHITE);
+            btnSolve.setText("Solved");
         }
 
         //Xử lý sự kiện ấn nút SOLVE
