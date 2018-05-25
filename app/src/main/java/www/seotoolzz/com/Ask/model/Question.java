@@ -1,9 +1,5 @@
 package www.seotoolzz.com.Ask.model;
 
-/**
- * Created by ngant on 4/15/2018.
- */
-
 public class Question {
     private int id;
     private String title;

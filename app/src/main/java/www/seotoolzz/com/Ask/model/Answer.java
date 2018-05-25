@@ -1,9 +1,5 @@
 package www.seotoolzz.com.Ask.model;
 
-/**
- * Created by ngant on 5/2/2018.
- */
-
 public class Answer {
     private int id;
     private int userId;
