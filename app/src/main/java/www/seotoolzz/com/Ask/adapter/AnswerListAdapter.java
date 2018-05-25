@@ -89,6 +89,7 @@ public class AnswerListAdapter extends BaseAdapter {
         TextView tvUserName = (TextView) v.findViewById(R.id.txtUserNameAnswer);
         TextView tvTime = (TextView) v.findViewById(R.id.txtTimeAnswer);
         Button btnSolve = (Button) v.findViewById(R.id.btnSolveAnswer);
+        Button btnSolved = (Button) v.findViewById(R.id.btnSolvedAnswer);
         Button btnDelete = (Button) v.findViewById(R.id.btnDeleteAnswer);
 
         //Gán nội dung các đoạn text
@@ -96,10 +97,10 @@ public class AnswerListAdapter extends BaseAdapter {
         tvUserName.setText(myAnswer.get(position).getUserName());
         tvTime.setText(myAnswer.get(position).getTime());
 
-        //Xét màu cho nút nếu câu trả lời là đúng
+        //Đổi nút nếu câu trả lời là đúng
         if (String.valueOf(myAnswer.get(position).getVoteNumber()).equals("true")) {
-            btnSolve.setTextColor(Color.WHITE);
-            btnSolve.setBackgroundColor(Color.parseColor("#00C851"));
+            btnSolve.setVisibility(View.GONE);
+            btnSolved.setVisibility(View.VISIBLE);
         }
 
         //Xử lý sự kiện ấn nút SOLVE
@@ -176,6 +177,7 @@ public class AnswerListAdapter extends BaseAdapter {
                         Toast.makeText(myContext, "Mark as solve success", Toast.LENGTH_LONG).show();
                         Intent changeView = new Intent(myContext, QuestionDetailActivity.class);
                         changeView.putExtra("id", String.valueOf(questionId));
+                        changeView.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         myContext.startActivity(changeView);
                     } else {
                         Toast.makeText(myContext, res.getJSONObject("meta").getJSONObject("message").getString("main"), Toast.LENGTH_LONG).show();
@@ -225,7 +227,7 @@ public class AnswerListAdapter extends BaseAdapter {
                         Toast.makeText(myContext, "Delete success", Toast.LENGTH_LONG).show();
                         Intent changeView = new Intent(myContext, QuestionDetailActivity.class);
                         changeView.putExtra("id", String.valueOf(questionId));
-//                        changeView.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        changeView.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         myContext.startActivity(changeView);
                     } else {
                         Toast.makeText(myContext, res.getJSONObject("meta").getJSONObject("message").getString("main"), Toast.LENGTH_LONG).show();

@@ -225,8 +225,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
                         tvNumberVote.setText(String.valueOf(data.getInt("voteCount")));
                         ownerId = data.getJSONObject("user").getJSONObject("data").getInt("id");
                         if (data.getInt("status") == 2) {
-                            tvNumberVote.setBackgroundColor(Color.parseColor("#00C853"));
-                            tvNumberVote.setTextColor(Color.WHITE);
+                            tvNumberVote.setTextColor(Color.parseColor("#00C853"));
                         }
                         tvDate.setText(data.getString("updatedAt"));
                         tvUserName.setText("Asks by: " + data.getJSONObject("user").getJSONObject("data").getString("username"));

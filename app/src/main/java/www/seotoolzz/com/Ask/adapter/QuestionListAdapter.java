@@ -65,12 +65,10 @@ public class QuestionListAdapter extends BaseAdapter {
         tvDate.setText(myQuestion.get(position).getDate());
 
         if (myQuestion.get(position).isSolve() == 2) {
-            layout.setBackgroundColor(Color.parseColor("#00C851"));
-            tvNumberVote.setTextColor(Color.WHITE);
+            tvNumberVote.setTextColor(Color.parseColor("#00C851"));
         }
         if (myQuestion.get(position).isSolve() == 0) {
-            layout.setBackgroundColor(Color.parseColor("#FFBB33"));
-            tvNumberVote.setTextColor(Color.WHITE);
+            tvNumberVote.setTextColor(Color.parseColor("#FFBB33"));
         }
 
         v.setTag(myQuestion.get(position).getId());

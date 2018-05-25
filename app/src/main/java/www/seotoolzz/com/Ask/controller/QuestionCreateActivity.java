@@ -71,7 +71,7 @@ public class QuestionCreateActivity extends AppCompatActivity {
         });
     }
 
-    //Hàm gọi API xử lý việc gửi câu trả hỏi
+    //Hàm gọi API xử lý việc gửi câu hỏi
     private void createQuestion(int status) {
         final String title = this.edTitle.getText().toString();
         final String question = this.edQuestion.getText().toString();
