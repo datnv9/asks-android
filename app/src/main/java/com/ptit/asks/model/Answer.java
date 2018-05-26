@@ -1,6 +1,8 @@
 package com.ptit.asks.model;
 
-public class Answer {
+import java.io.Serializable;
+
+public class Answer implements Serializable {
     private int id;
     private int userId;
     private String content;

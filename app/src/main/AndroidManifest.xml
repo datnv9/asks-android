@@ -76,6 +76,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ptit.asks.controller.MainActivity" />
         </activity>
+
+        <activity
+            android:name=".controller.SearchResultActivity"
+            android:label="Asks">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ptit.asks.controller.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

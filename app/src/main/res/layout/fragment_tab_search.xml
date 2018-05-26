@@ -1,6 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:paddingEnd="20dp"
+    android:paddingStart="20dp">
 
-</ScrollView>
+    <TextView
+        android:id="@+id/pageTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Search"
+        android:textColor="@color/colorPrimary"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textViewSearchTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pageTitle"
+        android:layout_marginTop="30dp"
+        android:text="Question title:"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/editTextSearchTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewSearchTitle"
+        android:layout_marginTop="5dp"
+        android:hint="Your question title?"
+        android:inputType="textPersonName"
+        android:textColor="#000"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/textViewAskBy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editTextSearchTitle"
+        android:layout_marginTop="30dp"
+        android:text="Ask by:"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/editTextAskBy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewAskBy"
+        android:layout_marginTop="5dp"
+        android:hint="Who ask question?"
+        android:inputType="textPersonName"
+        android:textColor="#000"
+        android:textSize="16sp" />
+
+
+    <Button
+        android:id="@+id/btnStartDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editTextAskBy"
+        android:layout_marginTop="30dp"
+        android:text="Date start:"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="16sp" />
+    <TextView
+        android:id="@+id/textStartDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/btnStartDate"
+        android:layout_below="@id/editTextAskBy"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:layout_marginTop="45dp"
+        android:text="TextView" />
+
+    <Button
+        android:id="@+id/btnEndDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnStartDate"
+        android:layout_marginTop="30dp"
+        android:text="Date end:"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="16sp" />
+    <TextView
+        android:id="@+id/textEndDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/btnEndDate"
+        android:layout_below="@id/btnStartDate"
+        android:layout_toEndOf="@id/btnEndDate"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:layout_marginTop="45dp"
+        android:text="TextView" />
+
+    <Button
+        android:id="@+id/btnSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnEndDate"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="250dp"
+        android:gravity="center"
+        android:text="Search"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="16sp" />
+
+
+</RelativeLayout>
