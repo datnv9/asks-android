@@ -61,52 +61,57 @@
 
     <Button
         android:id="@+id/btnStartDate"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/editTextAskBy"
         android:layout_marginTop="30dp"
+        android:background="#F4F4F4"
         android:text="Date start:"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="16sp" />
+
     <TextView
         android:id="@+id/textStartDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/btnStartDate"
         android:layout_below="@id/editTextAskBy"
-        android:gravity="center"
-        android:textSize="16sp"
         android:layout_marginTop="45dp"
-        android:text="TextView" />
+        android:layout_toRightOf="@id/btnStartDate"
+        android:gravity="center"
+        android:text="TextView"
+        android:textSize="16sp" />
 
     <Button
         android:id="@+id/btnEndDate"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/btnStartDate"
         android:layout_marginTop="30dp"
+        android:background="#F4F4F4"
         android:text="Date end:"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="16sp" />
+
     <TextView
         android:id="@+id/textEndDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/btnEndDate"
         android:layout_below="@id/btnStartDate"
-        android:layout_toEndOf="@id/btnEndDate"
-        android:gravity="center"
-        android:textSize="16sp"
         android:layout_marginTop="45dp"
-        android:text="TextView" />
+        android:layout_toEndOf="@id/btnEndDate"
+        android:layout_toRightOf="@id/btnEndDate"
+        android:gravity="center"
+        android:text="TextView"
+        android:textSize="16sp" />
 
     <Button
         android:id="@+id/btnSearch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/btnEndDate"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:layout_marginLeft="250dp"
+        android:background="#F4F4F4"
         android:gravity="center"
         android:text="Search"
         android:textColor="@color/colorPrimaryDark"
