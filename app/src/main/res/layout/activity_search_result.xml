@@ -26,7 +26,7 @@
             android:layout_width="5dp"
             android:layout_height="45dp"
             android:layout_weight="1"
-            android:entries="@array/my_question_filter"
+            android:entries="@array/question_filter"
             android:padding="5dp"
             android:spinnerMode="dropdown" />
 

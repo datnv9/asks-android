@@ -123,10 +123,6 @@ public class SearchResultActivity extends AppCompatActivity {
                     defaultFilter = 2;
                     myArrayQuestion.clear();
                     getQuestionList(1, defaultFilter);
-                } else if (value.equals("Draft")) {
-                    defaultFilter = 0;
-                    myArrayQuestion.clear();
-                    getQuestionList(1, defaultFilter);
                 } else {
                     defaultFilter = 1;
                     myArrayQuestion.clear();
@@ -146,9 +142,6 @@ public class SearchResultActivity extends AppCompatActivity {
         if (status == 1) {
             //danh sách câu hỏi chưa được trả lời
             value = "";
-        } else if (status == 0) {
-            //danh sách câu hỏi nháp
-            value = "/draft";
         } else if (status == 2) {
             //danh sách câu hỏi đã được trả lời
             value = "/solve";

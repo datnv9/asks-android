@@ -1,4 +1,5 @@
 package com.ptit.asks.model;
+
 import java.io.Serializable;
 
 public class Search implements Serializable {
@@ -7,7 +8,7 @@ public class Search implements Serializable {
     public String StartDate;
     public String EndDate;
 
-    public  Search (String QuestionTitle, String AskBy, String StartDate,String EndDate){
+    public Search(String QuestionTitle, String AskBy, String StartDate, String EndDate) {
         this.QuestionTitle = QuestionTitle;
         this.AskBy = AskBy;
         this.StartDate = StartDate;
