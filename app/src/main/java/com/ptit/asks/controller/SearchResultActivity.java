@@ -78,9 +78,9 @@ public class SearchResultActivity extends AppCompatActivity {
         lvQuestion.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String idQuestion = myArrayQuestion.get(position).getId() + "";
+                Question questionModel = myArrayQuestion.get(position);
                 Intent intent = new Intent(SearchResultActivity.this, QuestionDetailActivity.class);
-                intent.putExtra("id", String.valueOf(idQuestion));
+                intent.putExtra("question", questionModel);
                 startActivity(intent);
             }
         });
@@ -157,6 +157,7 @@ public class SearchResultActivity extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 try {
+
                     JSONObject res = new JSONObject(response);
                     int code = res.getJSONObject("meta").getInt("status");
                     if (code == 700) {
@@ -166,31 +167,35 @@ public class SearchResultActivity extends AppCompatActivity {
                             for (int i = 0; i < data.length(); i++) {
                                 JSONObject q;
                                 q = data.getJSONObject(i);
+                                int userId = q.getJSONObject("user").getJSONObject("data").getInt("id");
                                 String username = q.getJSONObject("user").getJSONObject("data").getString("username");
                                 Question tmpQuestion = new Question(
                                         q.getInt("id"),
                                         q.getString("title"),
+                                        q.getString("content"),
                                         username,
+                                        userId,
                                         q.getInt("voteCount"),
                                         q.getString("updatedAt"),
                                         q.getInt("status")
                                 );
                                 boolean show = true;
-                                if (searchModel.getQuestionTitle() != "") {
+                                if (!searchModel.getQuestionTitle().equalsIgnoreCase("")) {
                                     if (!tmpQuestion.getTitle().toLowerCase().contains(searchModel.getQuestionTitle().toLowerCase())) show = false;
                                 }
-                                if (searchModel.getAskBy() != ""){
+                                if (!searchModel.getAskBy().equalsIgnoreCase("")){
                                     if (!tmpQuestion.getUsername().toLowerCase().contentEquals(searchModel.getAskBy().toLowerCase())) show = false;
                                 }
-                                if (searchModel.getStartDate() != ""){
+                                if (!searchModel.getStartDate().equalsIgnoreCase("")){
                                     if (tmpQuestion.getDate().compareTo(searchModel.getStartDate()) < 0) show = false;
                                 }
-                                if (searchModel.getEndDate() != ""){
+                                if (!searchModel.getEndDate().equalsIgnoreCase("")){
                                     if (tmpQuestion.getDate().compareTo(searchModel.getEndDate()) > 0) show = false;
                                 }
                                 if (show) myArrayQuestion.add(tmpQuestion);
                             }
                             if (currentPage == 1) {
+
                                 adapter = new QuestionListAdapter(getApplicationContext(), myArrayQuestion);
                                 lvQuestion.setAdapter(adapter);
                             } else {

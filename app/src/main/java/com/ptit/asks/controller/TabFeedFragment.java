@@ -88,9 +88,9 @@ public class TabFeedFragment extends Fragment {
         lvQuestion.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String idQuestion = myArrayQuestion.get(position).getId() + "";
+                Question question = myArrayQuestion.get(position);
                 Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
-                intent.putExtra("id", String.valueOf(idQuestion));
+                intent.putExtra("question", question);
                 startActivity(intent);
             }
         });
@@ -181,10 +181,13 @@ public class TabFeedFragment extends Fragment {
                             JSONObject q;
                             q = data.getJSONObject(i);
                             String username = q.getJSONObject("user").getJSONObject("data").getString("username");
+                            int userId = q.getJSONObject("user").getJSONObject("data").getInt("id");
                             myArrayQuestion.add(new Question(
                                     q.getInt("id"),
                                     q.getString("title"),
+                                    q.getString("content"),
                                     username,
+                                    userId,
                                     q.getInt("voteCount"),
                                     q.getString("updatedAt"),
                                     q.getInt("status")

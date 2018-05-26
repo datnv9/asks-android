@@ -62,7 +62,7 @@ public class QuestionOfUserActivity extends AppCompatActivity {
         lvQuestion = (ListView) findViewById(R.id.lvMyQuestion);
         myArrayQuestion = new ArrayList<>();
 
-        if (myArrayQuestion.size() > 1) {
+        if (myArrayQuestion.size() >= 1) {
             adapter = new QuestionListAdapter(getApplicationContext(), myArrayQuestion);
             isLoading = false;
         } else {
@@ -161,11 +161,14 @@ public class QuestionOfUserActivity extends AppCompatActivity {
                             for (int i = 0; i < data.length(); i++) {
                                 JSONObject q;
                                 q = data.getJSONObject(i);
+                                int userId = q.getJSONObject("user").getJSONObject("data").getInt("id");
                                 String username = q.getJSONObject("user").getJSONObject("data").getString("username");
                                 myArrayQuestion.add(new Question(
                                         q.getInt("id"),
                                         q.getString("title"),
+                                        q.getString("content"),
                                         username,
+                                        userId,
                                         q.getInt("voteCount"),
                                         q.getString("updatedAt"),
                                         q.getInt("status")

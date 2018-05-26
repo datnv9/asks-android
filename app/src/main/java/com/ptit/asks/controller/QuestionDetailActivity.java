@@ -37,6 +37,7 @@ import java.util.Map;
 import com.ptit.asks.R;
 import com.ptit.asks.adapter.AnswerListAdapter;
 import com.ptit.asks.model.Answer;
+import com.ptit.asks.model.Question;
 import com.ptit.asks.util.AsksUtil;
 
 public class QuestionDetailActivity extends AppCompatActivity {
@@ -59,7 +60,6 @@ public class QuestionDetailActivity extends AppCompatActivity {
     private ImageButton btnDownVote;
     private LinearLayout btnLayout;
 
-    private String questionId;
     private int previousVote;
     private int ownerId;
 
@@ -67,6 +67,8 @@ public class QuestionDetailActivity extends AppCompatActivity {
     private ListView lvAnswer;
     private AnswerListAdapter adapter;
     private List<Answer> myArrayAnswer;
+
+    private Question questionModel;
 
     //API url
     private String getQuestionUrl = "https://laravel-demo-deploy.herokuapp.com/api/v0/questions/";
@@ -103,9 +105,9 @@ public class QuestionDetailActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        //Lấy questionId từ Intent
+        //Lấy questionModel từ Intent
         Intent recIntent = getIntent();
-        questionId = recIntent.getStringExtra("id");
+        questionModel = (Question) recIntent.getSerializableExtra("question");
 
         //Ánh xạ các thành phần trong view
         tvTitle = (TextView) findViewById(R.id.txtTitle);
@@ -125,7 +127,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
         myArrayAnswer = new ArrayList<>();
 
         //Lấy các thông tin về câu hỏi và các câu trả lời từ server
-        getQuestion(questionId);
+        getQuestion(questionModel);
         getAnswerList(1);
 
         //Xử lý sự kiện nhấn sửa câu hỏi
@@ -136,7 +138,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Please login before do this", Toast.LENGTH_SHORT).show();
                 } else {
                     Intent intent = new Intent(QuestionDetailActivity.this, QuestionUpdateActivity.class);
-                    intent.putExtra("id", String.valueOf(questionId));
+                    intent.putExtra("question", questionModel);
                     startActivity(intent);
                 }
             }
@@ -178,7 +180,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Please login before do this", Toast.LENGTH_SHORT).show();
                 } else {
                     Intent intent = new Intent(QuestionDetailActivity.this, AnswerCreateActivity.class);
-                    intent.putExtra("id", String.valueOf(questionId));
+                    intent.putExtra("id", String.valueOf(questionModel.getId()));
                     startActivity(intent);
                 }
             }
@@ -210,54 +212,28 @@ public class QuestionDetailActivity extends AppCompatActivity {
     }
 
     //Hàm gọi API xử lý việc lấy thông tin câu hỏi
-    private void getQuestion(String questionId) {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, this.getQuestionUrl + questionId, new Response.Listener<String>() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONObject res = new JSONObject(response);
-                    int code = res.getJSONObject("meta").getInt("status");
-                    if (code == 700) {
-                        JSONObject data = res.getJSONObject("data");
-                        tvTitle.setText(data.getString("title"));
-                        tvContent.setText(data.getString("content"));
-                        tvNumberVote.setText(String.valueOf(data.getInt("voteCount")));
-                        ownerId = data.getJSONObject("user").getJSONObject("data").getInt("id");
-                        if (data.getInt("status") == 2) {
-                            tvNumberVote.setTextColor(Color.parseColor("#00C853"));
-                        }
-                        tvDate.setText(data.getString("updatedAt"));
-                        tvUserName.setText("Asks by: " + data.getJSONObject("user").getJSONObject("data").getString("username"));
-                        previousVote = data.getInt("voteCount");
+    private void getQuestion(Question questionModel) {
+        tvTitle.setText(questionModel.getTitle());
+        tvContent.setText(questionModel.getContent());
+        tvNumberVote.setText(String.valueOf(questionModel.getVote()));
+        ownerId = questionModel.getUserId();
+        if (questionModel.isSolve() == 2) {
+            tvNumberVote.setTextColor(Color.parseColor("#00C853"));
+        }
+        tvDate.setText(questionModel.getDate());
+        tvUserName.setText("Asks by: " + questionModel.getUsername());
+        previousVote = questionModel.getVote();
 
-                        //Lấy id người dùng đang đăng nhập
-                        SharedPreferences sharePrefs = QuestionDetailActivity.this.getApplicationContext().getSharedPreferences("ASKS", MODE_PRIVATE);
-                        int userId = sharePrefs.getInt("userId", 0);
+        //Lấy id người dùng đang đăng nhập
+        SharedPreferences sharePrefs = QuestionDetailActivity.this.getApplicationContext().getSharedPreferences("ASKS", MODE_PRIVATE);
+        int userId = sharePrefs.getInt("userId", 0);
 
-                        //Nếu người dùng là người đặt câu hỏi mới hiển thị lựa chọn sửa/xóa câu hỏi
-                        if (userId == data.getJSONObject("user").getJSONObject("data").getInt("id")) {
-                            btnLayout.setVisibility(View.VISIBLE);
-                        }
-                    } else {
-                        Toast.makeText(getApplicationContext(), res.getJSONObject("meta").getJSONObject("message").getString("main"), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                if (error.getMessage() == null) {
-                    Toast.makeText(getApplicationContext(), "Unknow error", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        AsksUtil.getmInstance(this).addToRequestQueue(stringRequest);
+        //Nếu người dùng là người đặt câu hỏi mới hiển thị lựa chọn sửa/xóa câu hỏi
+        if (userId == questionModel.getUserId()) {
+            btnLayout.setVisibility(View.VISIBLE);
+        }
     }
+
 
     //Hàm gọi API xử lý việc xóa câu hỏi
     private void deleteQuestion() {
@@ -291,7 +267,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("id", String.valueOf(questionId));
+                params.put("id", ""+questionModel.getId());
                 return params;
             }
 
@@ -341,7 +317,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("value", String.valueOf(inputValue));
-                params.put("id", String.valueOf(questionId));
+                params.put("id", ""+questionModel.getId());
                 return params;
             }
 
@@ -358,7 +334,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
 
     //Hàm gọi API xử lý việc lấy danh sách câu trả lời của câu hỏi
     private void getAnswerList(int pageNo) {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, this.getAnswerUrl + questionId + "?page=" + pageNo, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, this.getAnswerUrl + questionModel.getId() + "?page=" + pageNo, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -390,7 +366,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
 
                         //Truyền vào AnswerListAdapter để kiểm tra quyền người dùng với từng câu hỏi
                         AlertDialog.Builder alert = new AlertDialog.Builder(QuestionDetailActivity.this);
-                        adapter = new AnswerListAdapter(getApplicationContext(), myArrayAnswer, userId, alert, token, questionId, ownerId);
+                        adapter = new AnswerListAdapter(getApplicationContext(), myArrayAnswer, userId, alert, token, ""+questionModel.getId(), ownerId);
                         lvAnswer.setAdapter(adapter);
                         setListViewHeightBasedOnChildren(lvAnswer);
                     } else {

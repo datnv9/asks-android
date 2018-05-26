@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.ptit.asks.R;
+import com.ptit.asks.model.Question;
 import com.ptit.asks.util.AsksUtil;
 
 public class QuestionUpdateActivity extends AppCompatActivity {
@@ -35,6 +36,7 @@ public class QuestionUpdateActivity extends AppCompatActivity {
     private EditText edTitle;
     private EditText edContent;
     private String questionId;
+    private Question questionModel;
 
     //API url
     private String questionUrl = "https://laravel-demo-deploy.herokuapp.com/api/v0/questions/";
@@ -57,10 +59,11 @@ public class QuestionUpdateActivity extends AppCompatActivity {
 
         //Lấy questionId từ Intent
         Intent recIntent = getIntent();
-        questionId = recIntent.getStringExtra("id");
+        questionModel = (Question) recIntent.getSerializableExtra("question");
+        questionId = String.valueOf(questionModel.getId());
 
-        //Lấy các thông tin về câu hỏi từ server
-        getQuestion(questionId);
+        edTitle.setText(questionModel.getTitle());
+        edContent.setText(questionModel.getContent());
 
         //Xử lý sự kiện nhấn sửa câu hỏi
         btnUpdate.setOnClickListener(new View.OnClickListener() {
@@ -87,39 +90,6 @@ public class QuestionUpdateActivity extends AppCompatActivity {
                 startActivity(changeView);
             }
         });
-    }
-
-    //Hàm gọi API xử lý việc lấy thông tin câu hỏi
-    private void getQuestion(String questionId) {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, this.questionUrl + questionId, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONObject res = new JSONObject(response);
-                    int code = res.getJSONObject("meta").getInt("status");
-                    if (code == 700) {
-                        // Get token and save in local storage
-                        JSONObject data = res.getJSONObject("data");
-                        edTitle.setText(data.getString("title"));
-                        edContent.setText(data.getString("content"));
-                    } else {
-                        Toast.makeText(getApplicationContext(), res.getJSONObject("meta").getJSONObject("message").getString("main"), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                if (error.getMessage() == null) {
-                    Toast.makeText(getApplicationContext(), "Unknow error", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        AsksUtil.getmInstance(this).addToRequestQueue(stringRequest);
     }
 
     //Hàm gọi API xử lý việc cập nhật thông tin câu hỏi
